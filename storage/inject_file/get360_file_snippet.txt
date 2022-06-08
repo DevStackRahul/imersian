@@ -1,0 +1,278 @@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.app-buttons button {
+  display: flex;
+  align-items: center;
+  border: 0px;
+  padding: 5px;
+  border-radius: 5px;
+}
+  .app-buttons button img {
+    margin-right: 10px;
+    max-width: 20px !important;
+}
+ .app-buttons {
+    display: flex;
+    align-items: center;
+    grid-gap: 10px;
+    padding: 1rem;
+}
+  
+  .app-buttons .wishlist_button img, .app-buttons .imersian_open_collection img {
+    margin-right: 0px;
+}
+  .app-buttons button {
+  justify-content: center;
+}
+.app-buttons button span > i {
+    margin: 0 5px;
+}
+.app-buttons button > span:first-child {
+    font-size: 0!important;
+    line-height: initial;
+}
+  .imersian_remove_from_collection img {
+  margin: 0 !important;
+}
+ .imersian_add_to_collection img {
+  margin: 0 !important;
+} 
+  
+@media (max-width:749px){
+    .product__media-item {
+      width: 100%!important;
+  }
+  .product__media-list{
+    display:block!important;
+  } 
+}
+  
+  
+  
+</style>
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+<input type="hidden" class="imersian-variant-sku" value="{{current_variant.sku}}" />
+
+<div class="current_sku" data-attr ="{{product.selected_or_first_available_variant.sku}}" style="display:none;">{{product.selected_or_first_available_variant.sku}}</div>
+<div class="sku-unit" style="display:none;">
+  {% for variant in product.variants %}
+  
+  <p class="variant variant-test {{variant.id}}" data-id="{{variant.id}}" data-attr="{{variant.sku}}"></p>
+  {%endfor%}
+  {%- for media in product.media -%}
+  <div class="custom-media-id" data-media="{{media.id}}" data_var="{{product.selected_or_first_available_variant.id}}"></div>
+  {% endfor %}
+</div>
+
+<div class="store-name" style="display:none;">{{shop.name | handleize}}.myshopify.com</div>
+<div class="store-url" style="display:none;">{{shop.url}}</div>
+<div class="store_permanent" style="display:none;" >{{ shop.permanent_domain }}</div>
+{%comment%}App button start {%endcomment%}
+       
+      <div class="app-buttons">
+      <button class="imersian_3dview" id ="view-{{ product.selected_or_first_available_variant.id }}360">
+<!--         <img style="max-width:25px;" class="imgview360" src="https://cdn.shopify.com/s/files/1/0617/5965/2061/files/360.png?v=1639986896"> -->
+        
+        <span class="imgview360"></span>
+        <span class="text_changedView360">3D View</span>
+        </button>
+      <button class="imersian_inhome" id ="inhome-{{ product.selected_or_first_available_variant.id }}">
+<!--         <img style="max-width:25px;" class="Inhomeimg_backgroundColor" src="https://cdnshopify.com/s/files/1/0617/5965/2061/files/house.png?v=1639986896"/> -->
+        <span class="Inhomefont_awesomeIcon"></span>
+        <span class="homebuttontextColor">In Home</span>
+        </button>
+      <button class="imersian_add_to_collection" id="wishlist_button-{{ product.selected_or_first_available_variant.id }}">
+<!--        <img style="max-width:25px;" src="https://cdn.shopify.com/s/files/1/0617/5965/2061/files/heart.png?v=1639986895"/> -->
+        <span class="wishlist_button_fontIcon"></span>
+        </button>
+        
+        <button style='display:none;'  class="imersian_remove_from_collection" id="whishlist_remove_icon-{{ product.selected_or_first_available_variant.id }}">
+          <!--         <img style="max-width:25px;" src="https://cdn.shopify.com/s/files/1/0617/5965/2061/files/icons8-eye-30.png?v=1639986896"/> -->
+          <span class="imersian_remove_from_collection"></span>
+        </button>
+        
+      <button class="imersian_open_collection" id="preview-button-{{ product.selected_or_first_available_variant.id }}">
+<!--         <img style="max-width:25px;" src="https://cdn.shopify.com/s/files/1/0617/5965/2061/files/icons8-eye-30.png?v=1639986896"/> -->
+        <span class="previewButtonIcon"></span>
+        </button>
+        
+ 
+        
+     </div>
+ {%comment%}App button end {%endcomment%}
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() { 
+      //var data_att = $('.current_sku').attr('data-attr');
+     //alert(data_att);
+    
+    
+     //$('.product__media-list li:first-child').attr('data-ar',data_att);
+      
+       
+      $('.sku-btn input[type=radio]').click(function(){
+        
+        setTimeout(function() {
+      
+        ImersianWebClient.hasAddedToFavourites().then(result=>{
+          var imersianAddToCollectionBtn = document.getElementsByClassName("imersian_add_to_collection");
+          var imersianRemoveFromCollectionBtn = document.getElementsByClassName("imersian_remove_from_collection");
+
+          if (result === true) {
+            imersianAddToCollectionBtn[0].style.display = "none";
+            imersianRemoveFromCollectionBtn[0].style.display = "";
+            imersianAddToCollectionBtn[0].classList.add("imersian-collection-added");
+          } else {
+            imersianAddToCollectionBtn[0].style.display = "";
+            imersianRemoveFromCollectionBtn[0].style.display = "none";
+            imersianAddToCollectionBtn[0].classList.remove("imersian-collection-added");
+          }
+        }); 
+            
+  }, 500);
+      }); 
+    //var store_name = $('.store-name').html();
+    var store_name = $('.store_permanent').text();
+    //var store_name = url.replace(/^(http|https):\/\//, '').replace(/\/.+/, '');
+    //alert(store_name);
+   // var store_name = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
+    //alert(store_name);
+
+    $.ajax({
+      dataType:"json",
+      type: "POST",
+      data:{ store_name:store_name},
+      url: 'https://app.imersian.com/public/api/color-change',
+      success: function(data) {
+
+        var obj = JSON.parse(JSON.stringify(data));
+            
+        $(".imgview360").html('<img src="' + obj.upload_font_awesome360 + '" />');
+        $(".Inhomefont_awesomeIcon").html('<img src="' + obj.inhome_upload_fontAwesome + '" />');
+        
+        //$('.Inhomefont_awesomeIcon').html(obj.inhome_upload_fontAwesome);
+        $(".wishlist_button_fontIcon").html('<img src="' + obj.whishlist_font_awesome + '" />');
+
+       // $('.wishlist_button_fontIcon').html(obj.whishlist_font_awesome);
+        //$('.previewButtonIcon').html(obj.preview_font_awesome);
+       $(".previewButtonIcon").html('<img src="' + obj.preview_font_awesome + '" />');
+
+    $(".imersian_remove_from_collection").html('<img src="' + obj.remove_whishlist_font_icon + '" />');
+    
+        
+        $('.imersian_3dview').css("background-color",obj.button360Color);
+        $('.text_changedView360').css("color",obj.text_changed360view);
+        $('.imgview360').css("color",obj.image360_backgroundColor);
+        $('.imersian_3dview').css("font-size", obj.textSize360 + "px");
+        
+        $('.imersian_3dview').css("height",obj.buttonHeight360+"px");
+        $('.imersian_3dview').css("width",obj.buttonwidth360+"px");
+        $('.imersian_3dview').css("border-radius",obj.button_borderradius360+"px");
+        
+        
+
+        $('.imersian_inhome').css("background-color",obj.home_buttonColor);
+        $('.homebuttontextColor').css("color",obj.homebuttontextColor);
+        $('.Inhomefont_awesomeIcon').css("color",obj.Inhomeimg_backgroundColor);
+        $('.imersian_inhome').css("font-size", obj.textSizeHomeButton + "px");
+        
+        $('.imersian_inhome').css("height",obj.Inhomebuttonheight+"px");
+        $('.imersian_inhome').css("width",obj.Inhomebuttonwidth+"px");
+        $('.imersian_inhome').css("border-radius",obj.Inhomebutton_borderradius+"px");
+      
+        
+
+        $('.imersian_add_to_collection').css("background-color",obj.whishlistColor);
+        $('.wishlist_button_fontIcon').css("color",obj.whishlistColorIcon);
+         $('.imersian_add_to_collection').css("font-size", obj.textSizewishlistButton + "px");
+        
+        $('.imersian_add_to_collection').css("height",obj.whishlistButtonheight+"px");
+        $('.imersian_add_to_collection').css("width",obj.whishlistButtonwidth+"px");
+        $('.imersian_add_to_collection').css("border-radius",obj.whishlistButton_borderRadius+"px");
+
+     
+
+        $('.imersian_open_collection').css("font-size", obj.tracking_button_fontsize + "px");
+        $('.imersian_open_collection').css("background-color", obj.peview_button_background_color);
+        $('.testing').css("color", obj.tracking_button_backgroundColor);
+        
+        $('.imersian_open_collection').css("height",obj.previewbuttonheight+"px");
+        $('.imersian_open_collection').css("width",obj.previewbuttonwidth+"px");
+        $('.imersian_open_collection').css("border-radius",obj.previewButton_borderadius+"px");
+        
+        
+        
+        $('.imersian_remove_from_collection').css("font-size", obj.whishlist_remove_icon_font_size + "px");
+        $('.imersian_remove_from_collection').css("background-color", obj.whishlist_remove_icon_text_color);
+        $('.imersian_remove_from_collection').css("color", obj.whishlist_remove_icon_background_color);
+        
+        
+         $('.imersian_remove_from_collection').css("height", obj.whishlist_remove_icon_buttonheight + "px");
+        $('.imersian_remove_from_collection').css("width", obj.whishlist_remove_icon_buttonwidth);
+        $('.imersian_remove_from_collection').css("border-radius", obj.whishlist_remove_icon_borderadius+"px");
+
+      }
+    });
+  });
+
+</script>
+
+<script>
+  $(".imersian_3dview").click(function(){
+     var sku =    $('.product__media-item').attr('data-ar');
+      console.log(sku);
+    ImersianWebClient.show3DView();
+        //alert(sku);
+         
+
+  });
+  
+   $(".imersian_inhome").click(function(){
+     var sku =    $('.product__media-item').attr('data-ar');
+     //var sku =    $('.product__media-item').attr('data-ar');
+       ImersianWebClient.showAR();
+
+  });
+
+    $(".imersian_open_collection").click(function(){
+      var sku =    $('.product__media-item').attr('data-ar');
+      ImersianWebClient.openCollection();
+
+    });
+  
+    $(".imersian_add_to_collection").click(function () {
+      if ($(".imersian_add_to_collection").hasClass("imersian-collection-added")) {
+        ImersianWebClient.removeFromFavourites();
+        $(".imersian_add_to_collection").removeClass("imersian-collection-added");
+        
+          $('.imersian_remove_from_collection').hide(); 
+        $(".imersian_add_to_collection").css("display", "block");
+        // TODO set unfilled heart icon
+      } else {
+        ImersianWebClient.addToFavourites();
+        $('.imersian_add_to_collection').hide();
+        $(".imersian_remove_from_collection").css("display", "block");
+        $(".imersian_add_to_collection").addClass("imersian-collection-added");
+        // TODO set filled heart icon
+      }
+    });
+  
+  $(".imersian_remove_from_collection").click(function () {
+    
+    if ($(".imersian_add_to_collection").hasClass("imersian-collection-added")) {
+        ImersianWebClient.removeFromFavourites();
+        $(".imersian_add_to_collection").removeClass("imersian-collection-added");
+        
+          $('.imersian_remove_from_collection').hide(); 
+        $(".imersian_add_to_collection").css("display", "block");
+      
+  
+        // TODO set unfilled heart icon
+      }
+    
+  });
+  
+</script>

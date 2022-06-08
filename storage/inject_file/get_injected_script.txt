@@ -1,0 +1,6 @@
+<script src="https://s3.ap-southeast-2.amazonaws.com/static.imersian/bundled.js"></script>
+	<script type="text/javascript">
+	  var ImersianWebClient = ImersianWebClient.default;
+	  ImersianWebClient.config("98accbcf-4c87-4f65-8c64-54e09a564f37", "viewer.imersian.com");
+	  ImersianWebClient.init();
+	</script>
